@@ -3,7 +3,6 @@ package com.chicagojoker.myshop.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -13,6 +12,7 @@ import com.chicagojoker.myshop.presentation.cart.CartScreen
 import com.chicagojoker.myshop.presentation.home.HomeScreen
 import com.chicagojoker.myshop.presentation.home.ProductViewModel
 import com.chicagojoker.myshop.presentation.productdetails.ProductDetailScreen
+import com.chicagojoker.myshop.presentation.shopping.ShoppingScreen
 
 
 @Composable
@@ -23,21 +23,17 @@ fun AppNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = ScreenRoutes.Home.route,
+        startDestination = BottomViewRoutes.Home.route,
         modifier = modifier
     ) {
         composable(ScreenRoutes.Home.route) {
             HomeScreen(
-                onProductClick = { productId ->
-                    navController.navigate(ScreenRoutes.ProductDetail.createRoute(productId))
+                onBrowseClick = {
+                    navController.navigate(BottomViewRoutes.Shop.route)
                 },
-                onFilterClick = {
-                    navController.navigate(ScreenRoutes.Filter.route)
-                },
-                onAddToCartClick = {
+                onCartClick = {
                     navController.navigate(ScreenRoutes.Cart.route)
-                },
-                viewModel = sharedViewModel
+                }
             )
         }
 
@@ -49,7 +45,21 @@ fun AppNavGraph(
             }
 
         composable(route = ScreenRoutes.Cart.route) {
-            CartScreen(viewModel = sharedViewModel)
+            CartScreen(viewModel = sharedViewModel, navController = navController)
+        }
+        composable(BottomViewRoutes.Shop.route) {
+            ShoppingScreen(
+                viewModel = sharedViewModel,
+                onProductClick = { productId ->
+                    navController.navigate(ScreenRoutes.ProductDetail.createRoute(productId))
+                },
+                onAddToCartClick = {
+                    navController.navigate(ScreenRoutes.Cart.route)
+                },
+                onFilterClick = {
+                    // optional, or leave empty for now
+                }
+            )
         }
 
         //

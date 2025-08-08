@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.rememberNavController
 import com.chicagojoker.myshop.navigation.AppNavGraph
 import com.chicagojoker.myshop.presentation.home.HomeScreen
+import com.chicagojoker.myshop.presentation.main.MainScreen
 import com.chicagojoker.myshop.presentation.ui.theme.MyShopTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -17,8 +18,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MyShopTheme {
-                val navController = rememberNavController()
-                AppNavGraph(navController = navController)
+                MainScreen()
             }
         }
     }
