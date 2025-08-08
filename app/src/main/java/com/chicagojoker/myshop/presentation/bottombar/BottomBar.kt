@@ -27,13 +27,26 @@ fun BottomBar(navController: NavHostController) {
             NavigationBarItem(
                 selected = currentRoute == item.route,
                 onClick = {
-                    navController.navigate(item.route) {
-                        // Avoid multiple copies of same destination
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+//                    navController.navigate(item.route) {
+//                        // Avoid multiple copies of same destination
+////                        popUpTo(navController.graph.startDestinationId) {
+////                            inclusive = false
+////                        }
+////                        launchSingleTop = true
+//                        popUpTo(navController.graph.findStartDestination().id) {
+//                            saveState = true
+//                            inclusive = false
+//                        }
+//                        launchSingleTop = true
+//                        restoreState = true
+                    if (currentRoute != item.route) {
+                        navController.navigate(item.route) {
+                            popUpTo(navController.graph.findStartDestination().route ?: BottomViewRoutes.Home.route) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
                     }
                 },
                 icon = { Icon(imageVector = item.icon, contentDescription = item.label) },

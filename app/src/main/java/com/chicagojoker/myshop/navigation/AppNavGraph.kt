@@ -26,7 +26,7 @@ fun AppNavGraph(
         startDestination = BottomViewRoutes.Home.route,
         modifier = modifier
     ) {
-        composable(ScreenRoutes.Home.route) {
+        composable(BottomViewRoutes.Home.route) {
             HomeScreen(
                 onBrowseClick = {
                     navController.navigate(BottomViewRoutes.Shop.route)
