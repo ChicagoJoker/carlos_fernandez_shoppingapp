@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.moshi)
     implementation(libs.moshi.kotlin)
+    implementation(libs.androidx.material.icons.extended)
     kapt(libs.moshiKapt)
     implementation(libs.hilt)
     implementation(libs.hiltNavigationCompose)

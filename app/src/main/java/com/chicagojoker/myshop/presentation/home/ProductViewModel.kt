@@ -2,6 +2,7 @@ package com.chicagojoker.myshop.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.chicagojoker.myshop.domain.model.CartItem
 import com.chicagojoker.myshop.domain.model.Product
 import com.chicagojoker.myshop.domain.usecase.GetProductsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,8 +23,8 @@ class ProductViewModel @Inject constructor(
     private val _selectedCategory = MutableStateFlow<String?>(null)
     val selectedCategory: StateFlow<String?> = _selectedCategory
 
-    private val _cartItems = MutableStateFlow<List<Product>>(emptyList())
-    val cartItems: StateFlow<List<Product>> = _cartItems
+    private val _cartItems = MutableStateFlow<List<CartItem>>(emptyList())
+    val cartItems: StateFlow<List<CartItem>> = _cartItems
 
     init {
         println("🔥 ViewModel INIT")
@@ -48,8 +49,58 @@ class ProductViewModel @Inject constructor(
     }
 
     fun addToCart(product: Product) {
-        println("✅ Adding to cart: ${product.title}")
-        _cartItems.value = _cartItems.value + product
+        val currentItems = _cartItems.value.toMutableList()
+        val index = currentItems.indexOfFirst { it.product.id == product.id }
+
+        if (index >= 0) {
+            // Increment quantity
+            val existingItem = currentItems[index]
+            currentItems[index] = existingItem.copy(quantity = existingItem.quantity + 1)
+        } else {
+            // Add new item
+            currentItems.add(CartItem(product = product, quantity = 1))
+        }
+
+        _cartItems.value = currentItems
     }
+
+    fun removeFromCart(product: Product) {
+        val currentItems = _cartItems.value.toMutableList()
+        val index = currentItems.indexOfFirst { it.product.id == product.id }
+        if (index >= 0) {
+            currentItems.removeAt(index)
+        }
+        _cartItems.value = currentItems
+    }
+
+    fun increaseQuantity(product: Product) {
+        val currentItems = _cartItems.value.toMutableList()
+        val index = currentItems.indexOfFirst { it.product.id == product.id }
+
+        if (index >= 0) {
+            val existingItem = currentItems[index]
+            currentItems[index] = existingItem.copy(quantity = existingItem.quantity + 1)
+            _cartItems.value = currentItems
+        }
+
+    }
+    fun decreaseQuantity(product: Product) {
+        val currentItems = _cartItems.value.toMutableList()
+        val index = currentItems.indexOfFirst { it.product.id == product.id }
+
+        if (index >= 0) {
+            val existingItem = currentItems[index]
+            if(existingItem.quantity > 1)
+            {
+                currentItems[index] = existingItem.copy(quantity = existingItem.quantity - 1)
+            }
+            else
+            {
+                currentItems.removeAt(index)
+            }
+            _cartItems.value = currentItems
+        }
+    }
+
 
 }
